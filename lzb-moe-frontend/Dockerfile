@@ -7,14 +7,11 @@ COPY . .
 RUN npm i && npm run build
 
 
-FROM node:22-alpine
+# Unprivileged nginx terminates TLS with a certificate mounted at /tls
+# (tls.crt + tls.key) and proxies /api/ to the backend service.
+FROM docker.io/nginxinc/nginx-unprivileged:1.29-alpine
 
-WORKDIR /app
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-COPY --from=builder /app/dist /app
-
-EXPOSE 80
-
-RUN npm i http-server
-
-CMD ["npx", "http-server", "/app", "--host", "--port", "80"]
+EXPOSE 8080 8443
