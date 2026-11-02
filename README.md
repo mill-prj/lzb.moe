@@ -1,3 +1,3 @@
-# ruma.moe
+# lzb.moe
 
-모에모에 루마
+모에모에 LZB
